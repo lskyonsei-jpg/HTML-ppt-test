@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>중국 산업정책 해독</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@700;900&display=swap">
+<style>
+/* Layout: 1280×720 stage (16:9, 1pt = 1pt), min text 20pt.
+   Color 60-30-10: white ground, navy for text/structure, red only for emphasis. One gray for secondary text, one hairline. */
+:root{
+  color-scheme:light;
+  --white:#FFFFFF; --navy:#14213D; --red:#C8102E; --gray:#5B6475; --line:#DFE3EA; --page:#ECEEF2;
+  --f-display:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--navy);font-family:var(--f-body);overflow:hidden;font-variant-numeric:tabular-nums;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#app{height:100%;display:flex;flex-direction:column}
+#progress{display:flex;gap:3px;padding-block:8px 0;flex:none}
+#progress button{flex:1;height:4px;border:0;padding:0;background:var(--line);cursor:pointer}
+#progress button.done{background:var(--navy)}
+#progress button.cur{background:var(--red)}
+#viewport{flex:1;position:relative;min-height:0;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--white);box-shadow:0 4px 20px rgba(20,33,61,.10)}
+
+.slide{position:absolute;inset:0;padding:40px 60px 44px;display:flex;flex-direction:column;gap:26px;background:var(--white);
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s}
+.slide.active{opacity:1;visibility:visible;transition:opacity .3s ease}
+.slide > aside.notes{display:none}
+.hd{display:flex;flex-direction:column;gap:6px;flex:none}
+.ey{font-size:20pt;font-weight:700;color:var(--red);line-height:1.2}
+h2{font-family:var(--f-display);font-weight:700;font-size:32pt;line-height:1.2;margin:0;letter-spacing:-.01em;text-wrap:balance}
+p{margin:0}
+.bd{flex:1;min-height:0;display:flex;gap:40px}
+.col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.em{color:var(--red);font-weight:700}
+.g{color:var(--gray)}
+ul.pts{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:16px}
+ul.pts li{font-size:22pt;line-height:1.4;padding-left:22px;position:relative}
+ul.pts li::before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;background:var(--navy)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 22px;align-items:baseline;border-top:2px solid var(--navy);padding-top:12px}
+.kv b{font-family:var(--f-display);font-size:40pt;line-height:1.1}
+.kv span{font-size:22pt;color:var(--gray)}
+.line{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:baseline;border-top:1px solid var(--line);padding:14px 0;font-size:22pt;line-height:1.35}
+.line .k{font-weight:700}
+.take{border-left:4px solid var(--red);padding:4px 0 4px 18px;font-size:22pt;line-height:1.4;font-weight:600}
+
+.fig{display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0;flex:1}
+.paper{position:relative;flex:1;min-height:0;border:1px solid var(--line)}
+.paper img{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);object-fit:contain;cursor:zoom-in}
+figcaption{font-size:20pt;color:var(--gray);line-height:1.2}
+figure{margin:0}
+.tabs,.seg{display:flex;gap:4px;flex-wrap:wrap;flex:none}
+.tabs button,.seg button{font:600 20pt var(--f-body);padding:2px 14px;border:1.5px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer;line-height:1.35}
+.tabs button[aria-selected="true"],.seg button[aria-pressed="true"]{background:var(--navy);color:var(--white)}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+
+.cover{background:var(--navy);color:var(--white);justify-content:space-between;padding:60px 72px 50px}
+.cover .rule{width:96px;height:6px;background:var(--red)}
+.cover .lab{font-size:20pt;font-weight:600;color:rgba(255,255,255,.75)}
+.cover h1{font-family:var(--f-display);font-weight:900;font-size:64pt;line-height:1.1;margin:0}
+.cover .sub{font-size:24pt;color:rgba(255,255,255,.85)}
+.cover .au{display:flex;gap:44px;font-size:22pt;border-top:1px solid rgba(255,255,255,.25);padding-top:18px;flex-wrap:wrap}
+.cover .au span{color:rgba(255,255,255,.65);font-size:20pt;margin-left:8px}
+
+.cm{display:grid;grid-template-columns:140px 1fr 1fr;font-size:20pt;border-top:2px solid var(--navy)}
+.cm div{padding:10px;text-align:center;border-bottom:1px solid var(--line)}
+.cm .h{color:var(--gray);font-weight:600}
+.cm .v{font-size:28pt;font-weight:700;display:block;line-height:1.1}
+.cm .bad .v{color:var(--red)}
+.met{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.met div{display:flex;flex-direction:column}
+.met span{font-size:20pt;color:var(--gray)}
+.met b{font-size:30pt;font-weight:700}
+
+.trow{display:grid;grid-template-columns:210px 1fr 80px;align-items:center;gap:14px;font-size:21pt;height:52px}
+.trow .lb{text-align:right;white-space:nowrap}
+.trow .bar{height:22px;position:relative;border-left:2px solid var(--navy)}
+.trow .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--navy);transition:width .4s ease}
+.trow.hi .bar i{background:var(--red)}
+.trow .vl{font-weight:700;text-align:right}
+
+.align{display:grid;grid-template-columns:240px 1fr 1fr;font-size:21pt;border-top:2px solid var(--navy)}
+.align > div{padding:9px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.align .hh{font-weight:700;color:var(--gray)}
+.arr{font-weight:700;width:26px;text-align:center}
+.arr.gd{color:var(--navy)} .arr.bad{color:var(--red)} .arr.ns{color:var(--line)}
+
+.slider{display:flex;flex-direction:column;gap:6px}
+.slider label{font-size:22pt;font-weight:600}
+.slider input{width:100%;accent-color:var(--red);height:30px}
+.slider .ends{display:flex;justify-content:space-between;font-size:20pt;color:var(--gray)}
+.dv{display:grid;grid-template-columns:190px 1fr 130px;gap:14px;align-items:center;font-size:21pt;height:56px}
+.dv .axis{position:relative;height:26px;background:linear-gradient(var(--navy),var(--navy)) center/2px 100% no-repeat}
+.dv .axis i{position:absolute;top:2px;bottom:2px}
+.dv .vl{font-weight:700;text-align:right}
+
+.pers{display:grid;grid-template-columns:1.1fr 1fr 1fr;border-top:2px solid var(--navy);font-size:22pt}
+.pers > div{padding:16px 14px;border-bottom:1px solid var(--line)}
+.pers .hh{font-weight:700;color:var(--gray);font-size:20pt}
+.pers .act{opacity:0;transition:.4s;color:var(--red);font-weight:700}
+.pers.on .act{opacity:1}
+.btn{align-self:flex-start;font:700 20pt var(--f-body);padding:6px 20px;border:0;background:var(--red);color:var(--white);cursor:pointer}
+
+#bar{flex:none;display:flex;align-items:center;gap:8px;padding-block:8px calc(10px + env(safe-area-inset-bottom,0px));font-size:14px;color:var(--gray);flex-wrap:wrap}
+#bar .sec{margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;font-weight:600}
+#bar button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--white);color:var(--navy);padding:6px 12px;cursor:pointer}
+#bar button[aria-pressed="true"]{background:var(--navy);color:var(--white)}
+#bar .cnt{min-width:64px;text-align:center;color:var(--navy);font-weight:600}
+#bar kbd{font-family:inherit;font-size:12px;opacity:.55;margin-left:4px}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(236,238,242,.97);display:flex;flex-direction:column;
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.overlay .x{align-self:flex-end;font:600 15px var(--f-body);border:1px solid var(--line);background:var(--white);color:var(--navy);padding:6px 14px;cursor:pointer}
+#lb .wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding-top:10px}
+#lb img{max-width:100%;max-height:calc(100% - 44px);background:var(--white);padding:14px;border:1px solid var(--line);object-fit:contain}
+#lb p{font-size:18px;font-weight:600;text-align:center}
+#toc .list{flex:1;overflow:auto;display:flex;flex-direction:column;gap:2px;padding-top:12px;max-width:520px;margin:0 auto;width:100%}
+#toc .list button{display:flex;gap:12px;text-align:left;font:500 16px var(--f-body);background:none;border:0;color:var(--navy);padding:8px 10px;cursor:pointer}
+#toc .list button:hover{background:var(--white)}
+#toc .list button.cur{background:var(--navy);color:var(--white)}
+#toc .list button span{opacity:.55;width:24px;flex:none}
+#notes{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(60px + env(safe-area-inset-bottom,0px));width:min(460px,calc(100% - 32px));max-height:52%;overflow:auto;background:var(--white);border:1px solid var(--line);border-top:3px solid var(--red);padding:16px 20px;box-shadow:0 10px 30px rgba(20,33,61,.15)}
+#notes h5{margin:0 0 8px;font-size:13px;color:var(--red)}
+#notes p{font-size:15.5px;line-height:1.75}
+@media (prefers-reduced-motion: reduce){.slide,.trow .bar i,.pers .act{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div id="app">
+  <div id="progress" aria-label="슬라이드 진행"></div>
+  <div id="viewport"><div id="stage">
+
+<!-- 1 -->
+<section class="slide cover" data-title="표지">
+  <div class="rule"></div>
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div class="lab">초청 세미나</div>
+    <h1>중국 산업정책 해독</h1>
+    <div class="sub">LLM으로 읽은 정부 문서 328만 건, 2000–2022</div>
+  </div>
+  <div class="au">
+    <div>Hanming Fang<span>UPenn</span></div>
+    <div>Ming Li<span>CUHK-SZ</span></div>
+    <div>Guangli Lu<span>CUHK-SZ</span></div>
+  </div>
+  <aside class="notes">초대해 주셔서 감사합니다. 중국 중앙·성·시 정부 문서 328만 건을 대규모 언어모델로 읽어 산업정책 데이터베이스를 처음 만들고, 이를 통해 산업정책의 정치경제를 분석한 연구입니다. (NBER Working Paper 33814)</aside>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="연구 동기와 질문">
+  <div class="hd"><div class="ey">연구 동기</div><h2>산업정책의 귀환, 데이터의 공백</h2></div>
+  <div class="bd" style="align-items:center">
+    <div class="col" style="flex:1">
+      <ul class="pts">
+        <li>CHIPS Act · EU 그린딜 · 인도 자립 → 산업정책 부활</li>
+        <li>질문 전환: 효과 여부 → <b>설계·집행 방식</b></li>
+        <li>공백: 누가·무엇을·어떤 도구로 지원했나</li>
+      </ul>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="line"><span class="k">Q1 지형</span><span>어떤 산업, 어떤 도구?</span></div>
+      <div class="line"><span class="k">Q2 선택</span><span>지역 비교우위 vs 상급정부?</span></div>
+      <div class="line" style="border-bottom:1px solid var(--line)"><span class="k">Q3 결과</span><span>기업 성과·과잉설비?</span></div>
+    </div>
+  </div>
+  <aside class="notes">산업정책은 다시 정책의 중심에 와 있고, 학계의 질문도 "효과가 있느냐"에서 "어떻게 설계·집행하느냐"로 바뀌었습니다. 그런데 누가 어떤 산업을 어떤 도구로 지원했는지 체계적으로 코딩된 데이터가 없습니다. 오늘은 지형, 산업 선택의 정치경제, 그 결과라는 세 질문에 답하겠습니다.</aside>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-title="데이터와 측정">
+  <div class="hd"><div class="ey">데이터와 측정</div><h2>정부 문서 328만 건을 LLM으로 판독</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1">
+      <div class="kv"><b>59.6만</b><span>산업정책 문서 (전체 18%)</span></div>
+      <ul class="pts">
+        <li>시 단위 · 톤 · 목표 산업 · 20개 도구</li>
+        <li>환각 억제: 질문 분해 · 근거 인용 · 원문 대조 · 다중 모델</li>
+        <li>+ 기업 등록 · 법인세 · VAT 161억 건 · 지도자</li>
+      </ul>
+    </div>
+    <figure class="fig" style="flex:.9">
+      <div class="paper"><img src="a/fa1.png" alt="LLM 구현 로드맵" data-cap="Fig. A1 · LLM 구현 로드맵"></div>
+      <figcaption>Fig. A1 · LLM 로드맵</figcaption>
+    </figure>
+  </div>
+  <aside class="notes">PKULaw와 정부 웹사이트에서 모은 문서 328만 건 중 약 60만 건이 산업정책입니다. 문서마다 발행 수준, 정책 톤, 4자리 목표 산업, 20개 정책 도구를 추출했습니다. 환각을 줄이려고 질문을 쪼개고, 원문 인용과 신뢰도를 요구하고, 인용이 원문에 실제 있는지 대조하고, 여러 모델 결과를 통합했습니다. 여기에 기업 등록, 법인세, 부가가치세 거래, 지방 지도자 자료를 결합했습니다.</aside>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-title="검증">
+  <div class="hd"><div class="ey">검증</div><h2>사람 수준의 정확도, 기업 행동 예측</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1">
+      <div class="seg" id="cmSeg">
+        <button aria-pressed="true" data-p="a">다수결</button>
+        <button aria-pressed="false" data-p="b">만장일치</button>
+      </div>
+      <div class="cm">
+        <div class="h"></div><div class="h">사람: 해당</div><div class="h">사람: 비해당</div>
+        <div class="h">LLM: 해당</div><div><span class="v" data-k="tp">287</span></div><div class="bad"><span class="v" data-k="fp">69</span></div>
+        <div class="h">LLM: 비해당</div><div class="bad"><span class="v" data-k="fn">79</span></div><div><span class="v" data-k="tn">1,565</span></div>
+      </div>
+      <div class="met">
+        <div><span>정확도</span><b data-k="acc">92.6</b></div>
+        <div><span>정밀도</span><b data-k="pre">80.6</b></div>
+        <div><span>재현율</span><b data-k="rec">78.4</b></div>
+        <div><span>F1</span><b data-k="f1">79.5</b></div>
+      </div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="tabs" role="tablist" data-fig="fx">
+        <button role="tab" aria-selected="true" data-src="a/fa3a.png" data-cap="Fig. A3 · 지원(실선)·규제(점선) 정책 후 신규 진입">신규 진입</button>
+        <button role="tab" aria-selected="false" data-src="a/fa3b.png" data-cap="Fig. A3(B) · 5개년 계획 고정효과 통제">+ 5개년 계획 통제</button>
+      </div>
+      <figure class="fig" id="fx">
+        <div class="paper"><img src="a/fa3a.png" alt="정책 후 신규 진입" data-cap="Fig. A3 · 지원(실선)·규제(점선) 정책 후 신규 진입"></div>
+        <figcaption>Fig. A3 · 지원(실선)·규제(점선) 정책 후 신규 진입</figcaption>
+      </figure>
+    </div>
+  </div>
+  <aside class="notes">무작위 2,000건을 연구보조원 세 명씩 판정한 결과와 비교하면 정확도 92.6%, 만장일치 문서만 보면 97.1%입니다. 사람끼리도 19% 문서에서 의견이 갈렸고, BERT 등 기존 분류기보다 모든 지표에서 낫습니다. 또 지원 정책 뒤엔 진입이 늘고 규제 정책 뒤엔 줄며, 5개년 계획을 통제해도 예측력이 남습니다.</aside>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-title="산업정책의 지형">
+  <div class="hd"><div class="ey">지형</div><h2>약 60만 건, 대부분 지방정부</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.3">
+      <div class="tabs" role="tablist" data-fig="f1">
+        <button role="tab" aria-selected="true" data-src="a/f1a.png" data-cap="Fig. 1(A) · 연도별 문서 수">연도별</button>
+        <button role="tab" aria-selected="false" data-src="a/f1b.png" data-cap="Fig. 1(B) · 지원 정책 비중 (중앙·성·시)">지원 비중</button>
+        <button role="tab" aria-selected="false" data-src="a/fa4.png" data-cap="Fig. A4 · 도시별 산업정책 건수">지도</button>
+      </div>
+      <figure class="fig" id="f1">
+        <div class="paper"><img src="a/f1a.png" alt="연도별 문서 수" data-cap="Fig. 1(A) · 연도별 문서 수"></div>
+        <figcaption>Fig. 1(A) · 연도별 문서 수</figcaption>
+      </figure>
+    </div>
+    <div class="col" style="flex:.7;justify-content:center;gap:24px">
+      <div class="kv"><b class="em">82%</b><span>성·시 정부 발행</span></div>
+      <div class="kv"><b>70%</b><span>지원 정책</span></div>
+      <div class="kv"><b>↑</b><span>제조업 내 고숙련</span></div>
+    </div>
+  </div>
+  <aside class="notes">산업정책은 꾸준히 늘었고, 82%가 성·시 정부 문서입니다. 약 70%가 지원, 29%가 규제 정책이며 지원 비중은 계속 오릅니다. 공간적으로는 광둥·장쑤·저장 등 동남부 연안에 집중되고, 제조업 안에서는 고숙련 산업 비중이 커졌습니다.</aside>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-title="정책 도구">
+  <div class="hd"><div class="ey">정책 도구</div><h2>중앙은 규칙, 지방은 보조금</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.35">
+      <div class="seg" id="lvSeg">
+        <button aria-pressed="true" data-l="0">전체</button>
+        <button aria-pressed="false" data-l="1">중앙</button>
+        <button aria-pressed="false" data-l="3">시</button>
+      </div>
+      <div id="tchart" aria-live="polite"></div>
+    </div>
+    <div class="col" style="flex:.65;justify-content:center">
+      <p class="take">보조금 사용 49%<br>→ 절반 이상은 보조금 없음</p>
+      <p class="g" style="font-size:20pt">도구 사용 문서 비율, 상위 6개 (%)</p>
+    </div>
+  </div>
+  <aside class="notes">20개 도구 중 상위 6개입니다. 중앙은 시장 진입·규제가 53%로 가장 많아 규칙을 정하는 역할이고, 시 정부는 보조금 56%, 노동 33%, 인프라 29%로 재정과 요소 투입 경쟁을 합니다. 보조금은 가장 흔한 도구지만 절반 이상의 정책은 보조금을 쓰지 않습니다. 보조금 데이터만으로 산업정책을 재면 큰 부분을 놓칩니다.</aside>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-title="도구의 효과">
+  <div class="hd"><div class="ey">도구의 효과</div><h2>진입엔 보조금, 생산성엔 R&amp;D</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.3">
+      <div class="tabs" role="tablist" data-fig="f3">
+        <button role="tab" aria-selected="true" data-src="a/f3a.png" data-cap="Fig. 3(A) · 도구별 신규 진입">진입</button>
+        <button role="tab" aria-selected="false" data-src="a/f3b.png" data-cap="Fig. 3(B) · 도구별 TFP">TFP</button>
+        <button role="tab" aria-selected="false" data-src="a/f4.png" data-cap="Fig. 4 · 산업 성숙에 따른 도구 변화">생애주기</button>
+      </div>
+      <figure class="fig" id="f3">
+        <div class="paper"><img src="a/f3a.png" alt="도구별 신규 진입" data-cap="Fig. 3(A) · 도구별 신규 진입"></div>
+        <figcaption>Fig. 3(A) · 도구별 신규 진입</figcaption>
+      </figure>
+    </div>
+    <div class="col" style="flex:.7;justify-content:center">
+      <ul class="pts">
+        <li>진입 ↑: 보조금 · 토지 · 인프라</li>
+        <li>TFP ↑: R&amp;D·기술 도입</li>
+        <li>산업 성숙 → 보조금에서 R&amp;D·인재로</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">신규 진입은 보조금, 인프라, 토지, 클러스터와 가장 강하게 연결되고, 생산성은 R&D·기술 도입 지원과 가장 강하게 연결됩니다. 세 번째 탭을 보시면, 시 정부는 산업 초기엔 보조금·토지·조달을, 성숙기엔 R&D·인재·클러스터를 더 씁니다. 도구 선택이 꽤 정교하다는 뜻입니다. 모두 기술적 회귀입니다.</aside>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-title="산업 선택의 결정 요인">
+  <div class="hd"><div class="ey">정치경제</div><h2>비교우위와 상급정부, 둘 다 작동</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1;justify-content:center">
+      <div class="line"><span class="k">경제</span><span>RCA 1SD ↑ → 지원 확률 <span class="em">+16.7%</span></span></div>
+      <div class="line" style="border-bottom:1px solid var(--line)"><span class="k">정치</span><span>성 지원 → 시 지원 계수 <span class="em">0.418</span></span></div>
+      <p class="g" style="font-size:20pt">부유한 도시·인맥 있는 지도자 → 덜 따름</p>
+    </div>
+    <div class="col" style="flex:.9">
+      <div class="tabs" role="tablist" data-fig="tdet">
+        <button role="tab" aria-selected="true" data-src="a/t4.png" data-cap="Table 4 · 경제 요인">Table 4</button>
+        <button role="tab" aria-selected="false" data-src="a/t5.png" data-cap="Table 5 · 하향 전달">Table 5</button>
+      </div>
+      <figure class="fig" id="tdet">
+        <div class="paper"><img src="a/t4.png" alt="Table 4" data-cap="Table 4 · 경제 요인"></div>
+        <figcaption>Table 4 · 경제 요인</figcaption>
+      </figure>
+    </div>
+  </div>
+  <aside class="notes">시 정부는 자기 지역의 비교우위 산업을 지원합니다. RCA가 1 표준편차 오르면 지원 확률이 16.7% 높아지고, 공급망 중심 산업과 상하류가 함께 지원받는 산업도 선호됩니다. 동시에 성이 지원하는 산업을 시가 따라 지원하는 경향이 강합니다. 부유한 도시, 상급자와 인맥이 있는 지도자는 덜 따르고, 승진 경쟁이 치열하면 더 따릅니다.</aside>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-title="2013년 전환점">
+  <div class="hd"><div class="ey">핵심 결과</div><h2>2013년, 위를 보기 시작한 도시들</h2></div>
+  <div class="bd">
+    <figure class="fig" style="flex:1.4">
+      <div class="paper"><img src="a/f5a.png" alt="RCA 유사도와 정책 유사도" data-cap="Fig. 5(A) · RCA 유사도(실선) vs 성 정책 유사도(파선)"></div>
+      <figcaption>Fig. 5 · RCA 유사도(실선) vs 성 정책 유사도(파선)</figcaption>
+    </figure>
+    <div class="col" style="flex:.6;justify-content:center;gap:24px">
+      <div class="kv"><b class="em">↑</b><span>상급정부 정렬</span></div>
+      <div class="kv"><b>↓</b><span>지역 비교우위 정렬</span></div>
+      <p class="g" style="font-size:20pt">2018년 이후 일부 재균형</p>
+    </div>
+  </div>
+  <aside class="notes">오늘의 핵심 그림입니다. 실선은 도시 정책과 자기 지역 비교우위의 유사도, 파선은 성 정책과의 유사도입니다. 2012년까지는 추세가 없다가 2013년부터 성 정책과는 닮아가고 비교우위와는 멀어집니다. 도시 정책이 위로 수렴하면서 지역 여건에서 멀어진 재집권화입니다.</aside>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-title="재집권화의 메커니즘">
+  <div class="hd"><div class="ey">메커니즘</div><h2>강해진 중앙, 바뀐 지방 유인</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1;justify-content:center">
+      <div class="line"><span class="k">중앙</span><span>지침 강도 ~10점 ↑, 대상 산업 확대</span></div>
+      <div class="line"><span class="k">재정</span><span>이전지출 의존 도시일수록 순응</span></div>
+      <div class="line" style="border-bottom:1px solid var(--line)"><span class="k">승진</span><span>상급 정렬 ↔ 승진으로 기준 이동</span></div>
+    </div>
+    <div class="col" style="flex:1">
+      <div class="tabs" role="tablist" data-fig="fm">
+        <button role="tab" aria-selected="true" data-src="a/f6b.png" data-cap="Fig. 6(B) · 정책 강도 (중앙 실선)">강도</button>
+        <button role="tab" aria-selected="false" data-src="a/f7a.png" data-cap="Fig. 7(A) · 중앙 정책 HHI">범위</button>
+        <button role="tab" aria-selected="false" data-src="a/t6.png" data-cap="Table 6 · 재정과 정렬">재정</button>
+        <button role="tab" aria-selected="false" data-src="a/t7.png" data-cap="Table 7 · 승진">승진</button>
+      </div>
+      <figure class="fig" id="fm">
+        <div class="paper"><img src="a/f6b.png" alt="정책 강도" data-cap="Fig. 6(B) · 정책 강도 (중앙 실선)"></div>
+        <figcaption>Fig. 6(B) · 정책 강도 (중앙 실선)</figcaption>
+      </figure>
+    </div>
+  </div>
+  <aside class="notes">원인은 위와 아래 양쪽에 있습니다. 중앙 문서의 구체성과 강도가 2013년 이후 약 10점 오르고 지원 산업 범위도 넓어졌습니다. 지방 쪽에선 토지 수입이 적고 이전지출에 기대는 도시일수록 위를 더 따르고, 특히 성이 재정 도구를 쓸 때 그렇습니다. 승진도 2013년 이전엔 비교우위 정합성과, 이후엔 상급 정렬과 연관됩니다.</aside>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-title="기업 성과">
+  <div class="hd"><div class="ey">결과 ① 기업 성과</div><h2>진입은 같이 늘고, 성과는 갈린다</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.35">
+      <div class="align" id="alignT"><div class="hh">지원 정책 ×</div><div class="hh">지역 비교우위</div><div class="hh">상급정부 정렬</div></div>
+    </div>
+    <div class="col" style="flex:.65;justify-content:center">
+      <p class="take">상급정부 정렬<br>→ 마크업 ↓ 마크다운 ↑<br>= 과잉설비·내권(內卷)</p>
+      <p class="g" style="font-size:20pt"><span style="color:var(--navy);font-weight:700">▲▼</span> 유리 · <span style="color:var(--red);font-weight:700">▲▼</span> 불리</p>
+    </div>
+  </div>
+  <aside class="notes">Table 8입니다. 지역 지원 정책이 비교우위와 맞을 때와 성의 우선순위와 겹칠 때를 비교했습니다. 진입은 둘 다 늘지만, 성의 우선순위를 따른 지원은 TFP·이윤·임금이 약하고, 마크업은 압축되며 임금 마크다운은 커집니다. 가격을 낮추고 임금을 누르는 경쟁, 즉 내권 현상과 맞닿아 있습니다.</aside>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-title="정책 확산">
+  <div class="hd"><div class="ey">결과 ② 정책 확산</div><h2>늦게 따라 할수록 성과는 줄어든다</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.15;gap:10px">
+      <div class="slider">
+        <label for="ordR">채택 순서: <span id="ordLbl" class="em"></span></label>
+        <input type="range" id="ordR" min="0" max="1" step="0.01" value="0.1">
+        <div class="ends"><span>선도</span><span>마지막 추종</span></div>
+      </div>
+      <div id="dvs"></div>
+    </div>
+    <figure class="fig" style="flex:.85">
+      <div class="paper"><img src="a/f8a.png" alt="채택 순서와 도구 유사도" data-cap="Fig. 8 · 채택 순서 vs 성과의 도구 유사도"></div>
+      <figcaption>Fig. 8 · 늦을수록 성 도구 복제</figcaption>
+    </figure>
+  </div>
+  <aside class="notes">슬라이더를 오른쪽으로 옮기면 늦게 채택한 도시일수록 진입은 더 늘지만, TFP는 상위 12% 이후 음으로 돌아서고 임금 마크다운은 커집니다. Table 9 계수로 계산한 선형 관계입니다. 오른쪽 그림처럼 늦은 도시는 성의 도구 묶음을 그대로 복제합니다.</aside>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-title="자기교정 부재">
+  <div class="hd"><div class="ey">결과 ③ 자기교정</div><h2>나쁜 신호에도 지원은 계속된다</h2></div>
+  <div class="bd" style="flex-direction:column;gap:20px">
+    <div class="pers" id="pers">
+      <div class="hh">시장 신호</div><div class="hh">교정이라면</div><div class="hh">실제</div>
+      <div>진입 과열</div><div>지원 중단</div><div class="act">지원 지속 ↑</div>
+      <div>마크업 하락</div><div>지원 중단</div><div class="act">지원 지속 ↑</div>
+      <div>임금 마크다운 상승</div><div>지원 중단</div><div class="act">지원 지속 ↑</div>
+    </div>
+    <button class="btn" id="persBtn">실제 결과 보기</button>
+  </div>
+  <aside class="notes">자기교정이 있다면 진입 과열, 마크업 하락, 임금 마크다운 상승 때 지원을 줄여야 합니다. 버튼을 눌러 보면 실제로는 세 경우 모두 지원이 더 지속됩니다(Table 10, 모두 5% 유의). 성이 같은 산업을 지원하면 지속 확률은 더 크게 오릅니다.</aside>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-title="지역 보호주의">
+  <div class="hd"><div class="ey">결과 ④ 지역 보호주의</div><h2>닮아가는 도시, 줄어드는 거래</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.3">
+      <div class="tabs" role="tablist" data-fig="f9">
+        <button role="tab" aria-selected="true" data-src="a/f9a.png" data-cap="Fig. 9(A) · 정책 유사도 vs 도시 내부 거래 비중">도시</button>
+        <button role="tab" aria-selected="false" data-src="a/f9b.png" data-cap="Fig. 9(B) · 정책 유사도 vs 도시 간 거래 비중">도시 쌍</button>
+      </div>
+      <figure class="fig" id="f9">
+        <div class="paper"><img src="a/f9a.png" alt="정책 유사도와 내부 거래" data-cap="Fig. 9(A) · 정책 유사도 vs 도시 내부 거래 비중"></div>
+        <figcaption>Fig. 9(A) · 정책 유사도 vs 도시 내부 거래 비중</figcaption>
+      </figure>
+    </div>
+    <div class="col" style="flex:.7;justify-content:center">
+      <ul class="pts"><li>같은 템플릿 → 산업 구조 유사</li><li>보완성 ↓ → 도시 간 거래 ↓</li></ul>
+      <p class="take">→ 보호주의·과잉설비</p>
+    </div>
+  </div>
+  <aside class="notes">모두가 같은 템플릿을 따르면 도시들의 산업 구조가 닮아가고 서로 사고팔 이유가 줄어듭니다. VAT 송장으로 보면 정책이 닮은 도시일수록 내부 거래 비중이 높고, 정책이 닮은 도시 쌍일수록 서로 덜 거래합니다.</aside>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-title="결론">
+  <div class="hd"><div class="ey">결론</div><h2>강한 조정의 대가</h2></div>
+  <div class="bd">
+    <div class="col" style="flex:1.2;justify-content:center">
+      <div class="line"><span class="k">측정</span><span>최초의 시 단위 산업정책 DB</span></div>
+      <div class="line"><span class="k">전환</span><span>2013년 이후 하향 정렬 ↑</span></div>
+      <div class="line" style="border-bottom:1px solid var(--line)"><span class="k">대가</span><span>성과 ↓ · 자기교정 부재 · 보호주의</span></div>
+    </div>
+    <div class="col" style="flex:.8;justify-content:center;gap:28px">
+      <p class="take" style="font-size:24pt">빠른 확산 ↔ 현지 적응 상실</p>
+      <p style="font-family:var(--f-display);font-size:30pt;font-weight:700">감사합니다</p>
+    </div>
+  </div>
+  <aside class="notes">정리하면, 최초의 시 단위 산업정책 데이터를 만들었고, 2013년 이후 하향 정렬이 강해졌으며, 그 대가로 기업 성과 약화, 자기교정 부재, 지역 보호주의가 나타났습니다. 다층 정부에서 강한 조정은 확산을 빠르게 하지만 현지 적응을 잃게 할 수 있습니다. 후속 과제는 후생 효과의 구조적 추정과 비효율 지원이 지속되는 제도적 마찰입니다. 감사합니다. 질문 받겠습니다.</aside>
+</section>
+
+  </div></div>
+  <div id="bar">
+    <span class="sec" id="secLbl"></span>
+    <button id="tocBtn" aria-pressed="false">목차<kbd>O</kbd></button>
+    <button id="notesBtn" aria-pressed="false">발표 노트<kbd>N</kbd></button>
+    <button id="fsBtn">전체 화면<kbd>F</kbd></button>
+    <button id="prevBtn" aria-label="이전 슬라이드">←</button>
+    <span class="cnt" id="cnt"></span>
+    <button id="nextBtn" aria-label="다음 슬라이드">→</button>
+  </div>
+</div>
+
+<div class="overlay" id="lb" hidden role="dialog" aria-label="그림 확대">
+  <button class="x" id="lbX">닫기 (Esc)</button>
+  <div class="wrap"><img id="lbImg" alt=""><p id="lbCap"></p></div>
+</div>
+<div class="overlay" id="toc" hidden role="dialog" aria-label="목차">
+  <button class="x" id="tocX">닫기 (Esc)</button>
+  <div class="list" id="tocList"></div>
+</div>
+<div id="notes" hidden><h5 id="notesH">발표 노트</h5><p id="notesP"></p></div>
+
+<script>
+(function(){
+const W=1280,H=720;
+const stage=document.getElementById('stage'),vp=document.getElementById('viewport');
+const slides=[...document.querySelectorAll('.slide')];let cur=0;
+function fit(){const w=vp.clientWidth,h=vp.clientHeight,s=Math.min(w/W,h/H);stage.style.transform=`translate(${(w-W*s)/2}px,${(h-H*s)/2}px) scale(${s})`;}
+new ResizeObserver(fit).observe(vp);fit();
+const prog=document.getElementById('progress'),tocList=document.getElementById('tocList');
+slides.forEach((s,i)=>{const b=document.createElement('button');b.title=(i+1)+'. '+s.dataset.title;b.setAttribute('aria-label',b.title);b.onclick=()=>go(i);prog.appendChild(b);
+  const t=document.createElement('button');const n=document.createElement('span');n.textContent=i+1;t.append(n,s.dataset.title);t.onclick=()=>{go(i);closeAll();};tocList.appendChild(t);});
+const notesP=document.getElementById('notesP'),notesBox=document.getElementById('notes');
+function go(i){i=Math.max(0,Math.min(slides.length-1,i));cur=i;
+  slides.forEach((s,k)=>{s.classList.toggle('active',k===i);s.setAttribute('aria-hidden',k===i?'false':'true');s.inert=k!==i;});
+  [...prog.children].forEach((b,k)=>{b.className=k<i?'done':k===i?'cur':'';});
+  [...tocList.children].forEach((b,k)=>b.classList.toggle('cur',k===i));
+  document.getElementById('cnt').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('secLbl').textContent=slides[i].dataset.title;
+  const n=slides[i].querySelector('aside.notes');notesP.textContent=n?n.textContent.trim():'';
+  document.getElementById('notesH').textContent='발표 노트 · '+(i+1);
+  try{history.replaceState(null,'','#s'+(i+1));}catch(e){}}
+const m=/^#s(\d+)$/.exec(location.hash);go(m?parseInt(m[1],10)-1:0);
+document.getElementById('prevBtn').onclick=()=>go(cur-1);
+document.getElementById('nextBtn').onclick=()=>go(cur+1);
+const lb=document.getElementById('lb'),toc=document.getElementById('toc'),tocBtn=document.getElementById('tocBtn');
+function closeAll(){lb.hidden=true;toc.hidden=true;tocBtn.setAttribute('aria-pressed','false');}
+function openLB(src,cap){const im=document.getElementById('lbImg');im.src=src;im.alt=cap||'';document.getElementById('lbCap').textContent=cap||'';lb.hidden=false;}
+document.getElementById('lbX').onclick=closeAll;document.getElementById('tocX').onclick=closeAll;
+lb.addEventListener('click',e=>{if(e.target===lb||e.target.classList.contains('wrap'))closeAll();});
+tocBtn.onclick=()=>{const o=toc.hidden;closeAll();toc.hidden=!o;tocBtn.setAttribute('aria-pressed',String(o));};
+const notesBtn=document.getElementById('notesBtn');
+function toggleNotes(){notesBox.hidden=!notesBox.hidden;notesBtn.setAttribute('aria-pressed',String(!notesBox.hidden));}
+notesBtn.onclick=toggleNotes;
+function fs(){try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>{});}catch(e){}}
+document.getElementById('fsBtn').onclick=fs;
+stage.addEventListener('click',e=>{const img=e.target.closest('.paper img');if(img)openLB(img.src,img.dataset.cap);});
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input')&&(e.key==='ArrowLeft'||e.key==='ArrowRight'))return;
+  if(e.key==='Escape'){closeAll();return;}
+  if(!lb.hidden||!toc.hidden)return;const k=e.key;
+  if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();go(cur+1);}
+  else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();go(cur-1);}
+  else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+  else if(k==='o'||k==='O')tocBtn.click();else if(k==='n'||k==='N')toggleNotes();else if(k==='f'||k==='F')fs();});
+let tx=null,ty=null;
+vp.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+vp.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)&&!e.target.closest('input'))go(cur+(dx<0?1:-1));tx=null;},{passive:true});
+
+document.querySelectorAll('.tabs').forEach(t=>{const fig=document.getElementById(t.dataset.fig);
+  t.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    t.querySelectorAll('button').forEach(x=>x.setAttribute('aria-selected','false'));b.setAttribute('aria-selected','true');
+    const img=fig.querySelector('img');img.src=b.dataset.src;img.dataset.cap=b.dataset.cap;img.alt=b.dataset.cap;
+    fig.querySelector('figcaption').textContent=b.dataset.cap;}));});
+
+const cmD={a:{tp:'287',fp:'69',fn:'79',tn:'1,565',acc:'92.6',pre:'80.6',rec:'78.4',f1:'79.5'},b:{tp:'186',fp:'28',fn:'19',tn:'1,382',acc:'97.1',pre:'87.2',rec:'90.7',f1:'89.0'}};
+document.querySelectorAll('#cmSeg button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#cmSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  const d=cmD[b.dataset.p];stage.querySelectorAll('.cm [data-k],.met [data-k]').forEach(el=>el.textContent=d[el.dataset.k]);}));
+
+const tools=[['재정 보조금',48.89,25.99,47.15,56.44],['시장 진입·규제',42.91,53.19,41.31,41.51],['노동 정책',28.08,17.37,25.76,33.08],['R&D·기술 도입',26.70,19.94,26.17,29.40],['인프라 투자',23.89,12.77,21.09,29.07],['기업환경 개선',21.52,14.00,18.43,26.48],['환경 정책',19.36,11.42,17.56,22.87],['산업 클러스터',19.07,8.81,16.90,23.84],['세제 혜택',16.25,15.83,13.59,18.81],['무역 보호',5.84,16.93,4.38,3.71]];
+let lv=0;const tc=document.getElementById('tchart');
+function drawT(){tc.innerHTML='';const top=[...tools].sort((a,b)=>b[lv+1]-a[lv+1]).slice(0,6);
+  top.forEach((r,k)=>{const d=document.createElement('div');d.className='trow'+(k===0?' hi':'');
+    const l=document.createElement('span');l.className='lb';l.textContent=r[0];
+    const bar=document.createElement('span');bar.className='bar';const i=document.createElement('i');i.style.width=(r[lv+1]/57*100)+'%';bar.appendChild(i);
+    const v=document.createElement('span');v.className='vl';v.textContent=Math.round(r[lv+1]);d.append(l,bar,v);tc.appendChild(d);});}
+document.querySelectorAll('#lvSeg button').forEach(b=>b.addEventListener('click',()=>{lv=+b.dataset.l;document.querySelectorAll('#lvSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawT();}));
+drawT();
+
+const al=[['신규 진입',[1,1],[1,1],true],['TFP',[0,0],[-1,1],true],['이윤',[0,0],[-1,1],true],['임금',[1,1],[-1,1],true],['마크업',[1,1],[-1,1],true],['임금 마크다운',[-1,1],[1,1],false]];
+const alT=document.getElementById('alignT');
+function cell(v,goodUp){const c=document.createElement('div');const a=document.createElement('span');const ns=!v[1]||v[0]===0;const up=v[0]>0;
+  a.className='arr '+(ns?'ns':(up===goodUp?'gd':'bad'));a.textContent=ns?'—':(up?'▲':'▼');
+  const t=document.createElement('span');t.textContent=ns?'유의하지 않음':(up?'증가':'감소');if(ns)t.className='g';else if(up!==goodUp)t.className='em';
+  c.append(a,t);return c;}
+al.forEach(r=>{const l=document.createElement('div');l.textContent=r[0];l.style.fontWeight='600';[l,cell(r[1],r[3]),cell(r[2],r[3])].forEach(e=>alT.appendChild(e));});
+
+const dv=[['신규 진입',.0608,.0552,true],['TFP',.0127,-.103,true],['이윤',.0362,-.0338,true],['임금 마크다운',-.0160,.104,false]];
+const dvs=document.getElementById('dvs'),ordR=document.getElementById('ordR'),ordL=document.getElementById('ordLbl');
+dv.forEach(d=>{d.max=Math.max(Math.abs(d[1]),Math.abs(d[1]+d[2]));const r=document.createElement('div');r.className='dv';
+  const a=document.createElement('span');a.textContent=d[0];const ax=document.createElement('span');ax.className='axis';ax.appendChild(document.createElement('i'));
+  const v=document.createElement('span');v.className='vl';r.append(a,ax,v);dvs.appendChild(r);d.el=r;});
+function drawD(){const o=+ordR.value;ordL.textContent='약 '+Math.max(1,Math.round(o*330))+'번째 / 330개 도시';
+  dv.forEach(d=>{const v=d[1]+d[2]*o,w=Math.abs(v)/d.max*50,i=d.el.querySelector('i'),good=(v>=0)===d[3];
+    i.style.width=w+'%';i.style.left=v>=0?'50%':(50-w)+'%';i.style.background=good?'var(--navy)':'var(--red)';
+    const vl=d.el.querySelector('.vl');vl.textContent=(v>=0?'+':'−')+Math.abs(v).toFixed(3);vl.style.color=good?'var(--navy)':'var(--red)';});}
+ordR.addEventListener('input',drawD);drawD();
+
+document.getElementById('persBtn').addEventListener('click',function(){const p=document.getElementById('pers');p.classList.toggle('on');this.textContent=p.classList.contains('on')?'숨기기':'실제 결과 보기';});
+})();
+</script>
+
+</body>
+</html>
